@@ -12,7 +12,9 @@ func getName*(op: Operator): string =
 type
     ExpressionType* = enum
         binaryExpression,
-        integerLiteral
+        integerLiteral,
+        identifierType,
+        assignmentType
     Expression* = ref ExpressionObj
     ExpressionObj = object
         case expressionKind*: ExpressionType
@@ -22,6 +24,11 @@ type
             rhs*: Expression
         of integerLiteral:
             value*: int
+        of identifierType:
+            identifierName*: string
+        of assignmentType:
+            assignmentName*: string
+            expression*: Expression
 
 
 func add*(lhs: Expression, rhs: Expression): Expression =
@@ -38,3 +45,9 @@ func divide*(lhs: Expression, rhs: Expression): Expression =
 
 func integer*(value: int): Expression =
     return Expression(expressionKind: integerLiteral, value: value)
+
+func identifier*(name: string): Expression =
+    return Expression(expressionKind: identifierType, identifierName: name)
+
+func assignment*(name: string, expression: Expression): Expression =
+    return Expression(expressionKind: assignmentType, assignmentName: name, expression: expression)
